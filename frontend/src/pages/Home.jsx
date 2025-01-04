@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-
-
 const StudentManagement = () => {
   const [students, setStudents] = useState([]);
   const [formData, setFormData] = useState({
