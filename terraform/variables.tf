@@ -25,5 +25,5 @@ variable "security_group" {
 
 variable "instance_name" {
   description = "Tag for the instance"
-  default     = "FreeTierUbuntuInstance"
+  default     = "mern-webapp-server"
 }
