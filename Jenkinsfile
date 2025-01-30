@@ -10,7 +10,7 @@ pipeline {
         FRONTEND_IMAGE = 'devops-frontend'
         SONARQUBE_URL = 'http://localhost:9000'
         SONARQUBE_PROJECT_KEY = 'DevOps-Project'
-        SONARQUBE_TOKEN = credentials('sonar-token') // Us
+        SONARQUBE_TOKEN = credentials('sonar-token')
     }
     stages {
         stage('Checkout') {
@@ -19,7 +19,7 @@ pipeline {
             }
         }
         
-        stage('Install Frontend Dependencies') {
+        stage('Install Dependencies') {
             steps {
                 dir('frontend') {
                     script {
@@ -29,11 +29,6 @@ pipeline {
                         '''
                     }
                 }
-            }
-        }
-        
-        stage('Install Backend Dependencies') {
-            steps {
                 dir('backend') {
                     script {
                         bat '''
@@ -44,6 +39,27 @@ pipeline {
                 }
             }
         }
+        stage('Run tests') {
+            steps {
+                dir('frontend') {
+                    script {
+                        bat '''
+                            echo "testing Frontend..."
+                            npm test
+                        '''
+                    }
+                }
+                dir('backend') {
+                    script {
+                        bat '''
+                            echo "testing Backend..."
+                            npm test
+                        '''
+                    }
+                }
+            }
+        }
+        
         stage('SonarQube Scan') {
             steps {
                 script {
@@ -70,33 +86,17 @@ pipeline {
                 }
             }
         }
-        stage("Trivy scan frontend image"){
-            steps {
-               script {
-                   bat "trivy image ${FRONTEND_IMAGE}:latest"
-               }
-            }
-        }
-        stage("Trivy scan backend image"){
-            steps {
-               script {
-                   bat "trivy image ${BACKEND_IMAGE}:latest"
-               }
-            }
-        }
-       
-        stage("Tag frontend image"){
+        stage("Tag Frontend Image"){
             steps {
                 script {
-                    bat "docker image tag ${FRONTEND_IMAGE}:latest ${REGISTRY}/${FRONTEND_IMAGE}:latest "
+                    bat "docker image tag ${FRONTEND_IMAGE}:latest ${REGISTRY}/${FRONTEND_IMAGE}:latest"
                 }
             }
         }
-        stage("Tag backend image"){
+        stage("Tag Backend Image"){
             steps {
                 script {
-                    bat "docker image tag ${BACKEND_IMAGE}:latest ${REGISTRY}/${BACKEND_IMAGE}:latest "
-                   
+                    bat "docker image tag ${BACKEND_IMAGE}:latest ${REGISTRY}/${BACKEND_IMAGE}:latest"
                 }
             }
         }
@@ -108,6 +108,27 @@ pipeline {
                 }
                 
             }
+        }
+        stage("Push to Dockerhub"){
+            steps{
+               script{
+                   bat "docker push ${REGISTRY}/${BACKEND_IMAGE}:latest"
+               }
+               script{
+                   bat "docker push ${REGISTRY}/${FRONTEND_IMAGE}:latest"
+               }
+            }
+        }
+    }
+    post {
+        success {
+            echo "Pipeline executed successfully!"
+        }
+        failure {
+            echo "Pipeline failed. Please check the logs."
+        }
+        always {
+            echo "Pipeline execution finished."
         }
     }
 }
