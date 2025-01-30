@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+    environment {
+        AWS_REGION = 'us-east-1'
+        AWS_CREDENTIALS_ID = 'aws-credentials-id' 
+    }
+
+    stages {
+        stage('Setup AWS Credentials') {
+            steps {
+                withAWS(credentials: "${AWS_CREDENTIALS_ID}", region: "${AWS_REGION}") {
+                    echo "AWS credentials configured!"
+                }
+            }
+        }
+        stage('terraform init'){
+            steps {
+                dir("terraform"){
+                    sh 'terraform init'
+                }
+            }
+        }
+        stage('terraform plan'){
+            steps {
+                dir("terraform"){
+                    sh 'terraform plan'
+                }
+            }
+        }
+        stage('terraform apply'){
+            steps {
+                dir("terraform"){
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+        stage('Clean up Inventory') {
+            steps {
+                dir("ansible"){
+                    sh 'echo "" > inventory.ini'
+                }
+            }
+        }
+        stage('Update Inventory') {
+            steps {
+                sh 'bash update_inventory.sh'
+            }
+        }
+        stage("Run Ansible Playbook"){
+            steps {
+                dir("ansible"){
+                    sh 'ansible-playbook -i inventory.ini playbook-webapp.yml'
+                }
+            }
+        }
+
+        
+    }
+    post {
+        success {
+            echo "Pipeline executed successfully!"
+        }
+        failure {
+            echo "Pipeline failed. Please check the logs."
+        }
+        always {
+            echo "Pipeline execution finished."
+        }
+    }
+}
