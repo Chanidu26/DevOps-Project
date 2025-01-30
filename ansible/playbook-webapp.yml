@@ -1,0 +1,47 @@
+---
+- name: Run Frontend and Backend Docker Containers
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create Docker network
+      docker_network:
+        name: my_app_network
+        state: present
+
+    - name: Pull Frontend Docker Image
+      docker_image:
+        name: chanidukarunarathna/devops-frontend
+        tag: latest
+        source: pull
+
+    - name: Pull Backend Docker Image
+      docker_image:
+        name: chanidukarunarathna/devops-backend
+        tag: latest
+        source: pull
+
+    - name: Run Backend Container
+      docker_container:
+        name: backend-container
+        image: chanidukarunarathna/devops-backend:latest
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "8000:8000" 
+        env:
+          MONGO: #mongodb url
+        networks:
+          - name: my_app_network
+
+    - name: Run Frontend Container
+      docker_container:
+        name: frontend-container
+        image: chanidukarunarathna/devops-frontend:latest
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "3000:80" 
+        env:
+          REACT_APP_API_BASE_URL: "http://backend-container:8000"
+        networks:
+          - name: my_app_network
