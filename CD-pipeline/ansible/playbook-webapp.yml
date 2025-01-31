@@ -40,8 +40,8 @@
         state: started
         restart_policy: unless-stopped
         published_ports:
-          - "3000:80" 
+          - "3000:3000" 
         env:
-          REACT_APP_API_BASE_URL: "http://backend-container:8000"
+          REACT_APP_API_BASE_URL: "http://$SERVER_IP:8000"
         networks:
           - name: my_app_network
