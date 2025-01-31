@@ -45,7 +45,7 @@ cat <<EOL > playbook-webapp.yml
         published_ports:
           - "8000:8000"  # Mapping host port 8000 to container port 8000
         env:
-          MONGO: "mongodb+srv://dbuser:dbuser@cluster0.knduhpw.mongodb.net/student_management?retryWrites=true&w=majority&appName=Cluster0"
+          MONGO: #add mongodb address
         networks:
           - name: my_app_network
 
