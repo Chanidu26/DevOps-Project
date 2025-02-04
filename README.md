@@ -65,10 +65,10 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 ## 📸 Screenshots
 
 ### CI Pipeline Stage View
-![CI Pipeline](./images/ci-pipeline.png)
+![CI Pipeline](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/CI.png)
 
 ### CD Pipeline Stage View
-![CD Pipeline](./images/cd-pipeline.png)
+![CD Pipeline](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/CD.png)
 
 ---
 
