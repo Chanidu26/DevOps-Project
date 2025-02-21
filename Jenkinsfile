@@ -63,7 +63,25 @@ pipeline {
         stage('SonarQube Scan') {
             steps {
                 script {
-                   bat 'sonar-scanner -v'
+                    withSonarQubeEnv('SonarQube') { 
+                        dir('frontend') {
+                            bat '''
+                                sonar-scanner -Dsonar.projectKey=DevOps-Frontend \
+                                    -Dsonar.sources=. \
+                                    -Dsonar.language=js \
+                                    -Dsonar.exclusions=**/node_modules/**
+                            '''
+                        }
+
+                        dir('backend') {
+                            bat '''
+                                sonar-scanner -Dsonar.projectKey=DevOps-Backend \
+                                    -Dsonar.sources=. \
+                                    -Dsonar.language=js \
+                                    -Dsonar.exclusions=**/node_modules/**
+                            '''
+                        }
+                    }
                 }
             }
         }
