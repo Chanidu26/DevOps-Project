@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        AWS_REGION = 'us-east-1'
+        AWS_REGION = 'us-east-1' 
         AWS_CREDENTIALS_ID = 'aws-credentials-id' 
     }
 
@@ -20,6 +20,13 @@ pipeline {
                 }
             }
         }
+        stage('terraform Validate'){
+            steps {
+                dir("terraform"){
+                    sh 'terraform validate'
+                }
+            }
+        }
         stage('terraform plan'){
             steps {
                 dir("terraform"){
@@ -34,11 +41,9 @@ pipeline {
                 }
             }
         }
-        stage('Clean up Inventory') {
+        stage('Update Playbook') {
             steps {
-                dir("ansible"){
-                    sh 'echo "" > inventory.ini'
-                }
+                sh 'bash update_playbook.sh'
             }
         }
         stage('Update Inventory') {
@@ -47,6 +52,13 @@ pipeline {
             }
         }
         stage("Run Ansible Playbook"){
+            steps {
+                dir("ansible"){
+                    sh 'ansible-playbook -i inventory.ini playbook.yml'
+                }
+            }
+        }
+        stage("Run Ansible Webapp Playbook "){
             steps {
                 dir("ansible"){
                     sh 'ansible-playbook -i inventory.ini playbook-webapp.yml'
