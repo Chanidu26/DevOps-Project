@@ -19,7 +19,37 @@ cat <<EOL > playbook-webapp.yml
   hosts: all
   become: yes
   tasks:
-    - name: Create Docker network
+    - name: Remove existing Docker network
+      docker_network:
+        name: my_app_network
+        state: absent
+      ignore_errors: yes
+
+    - name: Remove existing backend container if it exists
+      docker_container:
+        name: backend-container
+        state: absent
+      ignore_errors: yes 
+
+    - name: Remove existing frontend container if it exists
+      docker_container:
+        name: frontend-container
+        state: absent
+      ignore_errors: yes 
+
+    - name: Remove existing backend image if it exists
+      docker_image:
+        name: chanidukarunarathna/devops-backend
+        state: absent
+      ignore_errors: yes  
+
+    - name: Remove existing frontend image if it exists
+      docker_image:
+        name: chanidukarunarathna/devops-frontend
+        state: absent
+      ignore_errors: yes  
+    
+    - name: Create Docker Network
       docker_network:
         name: my_app_network
         state: present
@@ -43,9 +73,9 @@ cat <<EOL > playbook-webapp.yml
         state: started
         restart_policy: unless-stopped
         published_ports:
-          - "8000:8000"  # Mapping host port 8000 to container port 8000
+          - "8000:8000" 
         env:
-          MONGO: #add mongodb address
+          MONGO: #MongoDB Address 
         networks:
           - name: my_app_network
 
@@ -56,9 +86,9 @@ cat <<EOL > playbook-webapp.yml
         state: started
         restart_policy: unless-stopped
         published_ports:
-          - "3000:3000"  # Mapping host port 3000 to container port 3000
+          - "3000:3000" 
         env:
-          REACT_APP_API_BASE_URL: "http://$SERVER_IP:8000" 
+          REACT_APP_API_BASE_URL: "http://$SERVER_IP:8000"
         networks:
           - name: my_app_network
 EOL
