@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000" 
+    depends_on:
+      - backend
     networks:
       - devops-network
     environment:
@@ -18,6 +20,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000" 
+    depends_on:
+      - mongo
     networks:
       - devops-network
     environment:
