@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" 
+    networks:
+      - devops-network
+    environment:
+      REACT_APP_API_BASE_URL: http://localhost:8000
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000" 
+    networks:
+      - devops-network
+    environment:
+      MONGO: mongodb://mongo:27017/devops-project-db
+
+  mongo:
+    image: mongo:5.0
+    container_name: mongo
+    ports:
+      - "27017:27017" 
+    networks:
+      - devops-network
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  devops-network:
+    driver: bridge
