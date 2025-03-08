@@ -6,19 +6,19 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 
 ## 📊 CI Pipeline Overview
 
-| Stage 
-|-------
-| Declarative Tool Install
-| Checkout 
-| Install Dependencies 
-| Run Tests
-| SonarQube Scan
-| Build Frontend Image
-| Build Backend Image
-| Tag Images 
-| Dockerhub Login 
-| Push to Dockerhub 
-| Post Actions 
+| Stage | Description |
+|-------|-------------|
+| 🔧 **Declarative Tool Install** | Setup of required dependencies and tools |
+| 📥 **Checkout** | Retrieval of source code from version control |
+| 📦 **Install Dependencies** | Resolution of project dependencies |
+| 🧪 **Run Tests** | Execution of unit and integration tests |
+| 🔍 **SonarQube Scan** | Static code analysis and vulnerability detection |
+| 🛠️ **Build Frontend Image** | Creation of containerized frontend application |
+| 🛠️ **Build Backend Image** | Creation of containerized backend services |
+| 🏷️ **Tag Images** | Version management for container images |
+| 🔑 **Dockerhub Login** | Authentication with container registry |
+| 📤 **Push to Dockerhub** | Publication of verified container images |
+| 📢 **Post Actions** | Notification and reporting on pipeline status |
 
 ### CI Pipeline Key Highlights
 - **Tool Install**: Ensures all necessary dependencies are installed.
@@ -29,17 +29,17 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 
 ## 📦 CD Pipeline Overview
 
-| Stage 
-|-------
-| Setup AWS Credentials 
-| Terraform Init 
-| Terraform Plan 
-| Terraform Apply 
-| Update Playbook 
-| Update Inventory 
-| Run Ansible Playbook 
-| Run Ansible Webapp Playbook 
-| Post Actions 
+| Stage | Description |
+|-------|-------------|
+| 🔐 **Setup AWS Credentials** | Secure access configuration for AWS services |
+| 🌱 **Terraform Init** | Initialization of infrastructure as code environment |
+| 📋 **Terraform Plan** | Resource allocation planning and validation |
+| 🏗️ **Terraform Apply** | Provisioning of cloud infrastructure |
+| 📝 **Update Playbook** | Configuration of deployment automation scripts |
+| 📊 **Update Inventory** | Management of target deployment hosts |
+| 🚀 **Run Ansible Playbook** | Application of infrastructure configurations |
+| 🌐 **Run Ansible Webapp Playbook** | Deployment of application components |
+| 📢 **Post Actions** | Notification and validation of deployment success |
 
 ### CD Pipeline Key Highlights
 - **Infrastructure as Code (IaC)**: Utilizes Terraform for resource provisioning.
