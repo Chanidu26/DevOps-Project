@@ -70,6 +70,9 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 ### CD Pipeline Stage View
 ![CD Pipeline](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/CD.png)
 
+### Sonarqube Analysis View
+![CD Pipeline](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/CodeQuality.png)
+
 ---
 
 ## 🤖 Tools Used
