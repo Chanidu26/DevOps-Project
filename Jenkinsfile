@@ -10,7 +10,7 @@ pipeline {
         FRONTEND_IMAGE = 'devops-frontend'
         SONARQUBE_URL = 'http://localhost:9000'
         SONARQUBE_PROJECT_KEY = 'DevOps-Project'
-        SONARQUBE_TOKEN = credentials('sonar-token')
+        SONAR_TOKEN = credentials('sonar-token')
     }
     stages {
         stage('Checkout') {
@@ -60,7 +60,7 @@ pipeline {
             }
         }
         
-        stage('SonarQube Scan') {
+        stage('SonarQube Analysis') {
             steps {
                 script {
                     withSonarQubeEnv('SonarQube') { 
@@ -69,7 +69,8 @@ pipeline {
                                 sonar-scanner -Dsonar.projectKey=DevOps-Frontend \
                                     -Dsonar.sources=. \
                                     -Dsonar.language=js \
-                                    -Dsonar.exclusions=**/node_modules/**
+                                    -Dsonar.exclusions=node_modules/**,coverage/**,dist/** \
+                                    -Dsonar.login=%SONAR_TOKEN%
                             '''
                         }
 
@@ -78,7 +79,8 @@ pipeline {
                                 sonar-scanner -Dsonar.projectKey=DevOps-Backend \
                                     -Dsonar.sources=. \
                                     -Dsonar.language=js \
-                                    -Dsonar.exclusions=**/node_modules/**
+                                    -Dsonar.exclusions=node_modules/**,coverage/**,dist/** \
+                                    -Dsonar.login=%SONAR_TOKEN%
                             '''
                         }
                     }
@@ -104,15 +106,11 @@ pipeline {
                 }
             }
         }
-        stage("Tag Frontend Image"){
+        stage("Tag Images"){
             steps {
                 script {
                     bat "docker image tag ${FRONTEND_IMAGE}:latest ${REGISTRY}/${FRONTEND_IMAGE}:latest"
                 }
-            }
-        }
-        stage("Tag Backend Image"){
-            steps {
                 script {
                     bat "docker image tag ${BACKEND_IMAGE}:latest ${REGISTRY}/${BACKEND_IMAGE}:latest"
                 }
