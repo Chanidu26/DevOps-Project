@@ -75,7 +75,7 @@ cat <<EOL > playbook-webapp.yml
         published_ports:
           - "8000:8000" 
         env:
-          MONGO: #MongoDB Address 
+          MONGO: <Your MongoDB Address>
         networks:
           - name: my_app_network
 
