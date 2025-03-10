@@ -4,6 +4,12 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 
 ---
 
+## Workflow Diagram
+
+![workflow](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/workflow.png)
+
+---
+
 ## 📊 CI Pipeline Overview
 
 | Stage | Description |
