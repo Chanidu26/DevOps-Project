@@ -37,6 +37,9 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 
 | Stage | Description |
 |-------|-------------|
+| 🧹 **Clean Workspace** | Remove previous build artifacts to ensure a fresh deployment |
+| 🔄 **Git Checkout Configs** | Fetch the latest configuration files from the repository |
+| 🔑 **Retrieve PEM File from S3** | Securely fetch the private key for SSH access to instances |
 | 🔐 **Setup AWS Credentials** | Secure access configuration for AWS services |
 | 🌱 **Terraform Init** | Initialization of infrastructure as code environment |
 | 📋 **Terraform Plan** | Resource allocation planning and validation |
@@ -48,9 +51,11 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 | 📢 **Post Actions** | Notification and validation of deployment success |
 
 ### CD Pipeline Key Highlights
+- **Secure Access for secret files** : Ensures sensitive pemfile are securely stored and retrieved from AWS S3
 - **Infrastructure as Code (IaC)**: Utilizes Terraform for resource provisioning.
+- **Terraform State Management and Locking** : Used AWS S3 bucket and AWS DynamoDb table
 - **Configuration Management**: Automates configuration using Ansible playbooks.
-- **AWS Integration**: Seamlessly deploys to AWS cloud environments.
+- **AWS Integration**: Seamlessly deploys to AWS cloud environment.
 
 ---
 
@@ -78,6 +83,12 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 
 ### Sonarqube Analysis View
 ![CD Pipeline](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/CodeQuality.png)
+
+### AWS S3 Buckets
+![S3 Buckets](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/S3-Buckets.png)
+
+### AWS DynamoDb Table
+![DynamoDb Table](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/DynamoDb-Table.png)
 
 ---
 

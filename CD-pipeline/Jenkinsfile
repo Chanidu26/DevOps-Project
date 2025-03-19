@@ -6,6 +6,16 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs() 
+            }
+        }
+        stage('Checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'github-cred', url: 'https://github.com/Chanidu26/devops-cd.git'
+            }
+        }
         stage('Setup AWS Credentials') {
             steps {
                 withAWS(credentials: "${AWS_CREDENTIALS_ID}", region: "${AWS_REGION}") {
@@ -13,17 +23,24 @@ pipeline {
                 }
             }
         }
+        stage('Download & Setup Key') {
+            steps {
+                script {
+                    sh """
+                    aws s3 cp s3://devops-chanidu-pemfile-bucket/devops.pem ./devops.pem
+                    chmod 400 devops.pem
+                    cp devops.pem terraform/devops.pem
+                    cp devops.pem ansible/devops.pem
+                    rm -f devops.pem
+                    whoami
+                    """
+                }
+            }
+        }
         stage('terraform init'){
             steps {
                 dir("terraform"){
                     sh 'terraform init'
-                }
-            }
-        }
-        stage('terraform Validate'){
-            steps {
-                dir("terraform"){
-                    sh 'terraform validate'
                 }
             }
         }
