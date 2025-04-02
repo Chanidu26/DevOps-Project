@@ -19,23 +19,27 @@ cat <<EOL > playbook-webapp.yml
   hosts: all
   become: yes
   tasks:
-    - name: Remove existing Docker network
+    - name: Create Docker network
       docker_network:
         name: my_app_network
-        state: absent
-      ignore_errors: yes
+        state: present
+
+    - name: Create Docker Volume for MongoDB Data
+      docker_volume:
+        name: mongo_data
+        state: present
 
     - name: Remove existing backend container if it exists
       docker_container:
         name: backend-container
         state: absent
-      ignore_errors: yes 
+      ignore_errors: yes  
 
     - name: Remove existing frontend container if it exists
       docker_container:
         name: frontend-container
         state: absent
-      ignore_errors: yes 
+      ignore_errors: yes  
 
     - name: Remove existing backend image if it exists
       docker_image:
@@ -48,11 +52,12 @@ cat <<EOL > playbook-webapp.yml
         name: chanidukarunarathna/devops-frontend
         state: absent
       ignore_errors: yes  
-    
-    - name: Create Docker Network
-      docker_network:
-        name: my_app_network
-        state: present
+
+    - name: Pull MongoDB Docker Image if not present
+      docker_image:
+        name: mongo
+        tag: latest
+        source: pull
 
     - name: Pull Frontend Docker Image
       docker_image:
@@ -66,6 +71,22 @@ cat <<EOL > playbook-webapp.yml
         tag: latest
         source: pull
 
+    - name: Ensure MongoDB Container is Running
+      docker_container:
+        name: mongo-container
+        image: mongo:latest
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "27017:27017"
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: password
+        volumes:
+          - mongo_data:/data/db
+        networks:
+          - name: my_app_network
+
     - name: Run Backend Container
       docker_container:
         name: backend-container
@@ -73,9 +94,9 @@ cat <<EOL > playbook-webapp.yml
         state: started
         restart_policy: unless-stopped
         published_ports:
-          - "8000:8000" 
+          - "8000:8000"  
         env:
-          MONGO: <Your MongoDB Address>
+          MONGO: "mongodb://admin:password@mongo-container:27017"
         networks:
           - name: my_app_network
 
@@ -86,7 +107,7 @@ cat <<EOL > playbook-webapp.yml
         state: started
         restart_policy: unless-stopped
         published_ports:
-          - "3000:3000" 
+          - "3000:3000"  
         env:
           REACT_APP_API_BASE_URL: "http://$SERVER_IP:8000"
         networks:
