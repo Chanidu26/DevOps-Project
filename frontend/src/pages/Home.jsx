@@ -126,7 +126,7 @@ const StudentManagement = () => {
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-2xl font-bold mb-6">Student Management System</h1>
+        <h1 className="text-2xl font-bold mb-6">Student Management System 1</h1>
 
         {error && (
           <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
