@@ -1,14 +1,8 @@
 ---
-- name: Install Python and Docker
+- name: Install Docker for remote EC2
   hosts: all
   become: yes
   tasks:
-    - name: Install Python on remote machine
-      raw: |
-        sudo apt update && sudo apt install -y python3
-
-    - name: Install Python3 pip (if required for Ansible dependencies)
-      raw: sudo apt install -y python3-pip
 
     - name: Install required packages for Docker
       apt:
@@ -20,33 +14,35 @@
         state: present
 
     - name: Download Docker GPG key
-      raw: |
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
 
     - name: Add Docker repository
       apt_repository:
-        repo: deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu focal stable
-        state: present
-        filename: docker
+         repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu focal stable
+         state: present
+         filename: docker
 
-    - name: Install Docker CE
+    - name: Install Docker Engine
       apt:
         name:
           - docker-ce
           - docker-ce-cli
           - containerd.io
         state: present
+        update_cache: yes
 
-    - name: Ensure Docker service is running
+    - name: Ensure Docker service is running and enabled
       service:
         name: docker
         state: started
         enabled: yes
 
-    - name: Add current user to the Docker group
+    - name: Add current user to Docker group
       user:
-        name: ubuntu
+        name: ubuntu 
         groups: docker
         append: yes
         state: present
