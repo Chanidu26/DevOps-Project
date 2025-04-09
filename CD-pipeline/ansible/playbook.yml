@@ -1,9 +1,8 @@
 ---
-- name: Install Docker for remote EC2
+- name: Install Docker for EC2
   hosts: all
   become: yes
   tasks:
-
     - name: Install required packages for Docker
       apt:
         name:
@@ -14,35 +13,33 @@
         state: present
 
     - name: Download Docker GPG key
-      get_url:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        dest: /etc/apt/keyrings/docker.asc
-        mode: '0644'
+      raw: |
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
 
     - name: Add Docker repository
       apt_repository:
-         repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu focal stable
-         state: present
-         filename: docker
+        repo: deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+        filename: docker
 
-    - name: Install Docker Engine
+    - name: Install Docker CE
       apt:
         name:
           - docker-ce
           - docker-ce-cli
           - containerd.io
         state: present
-        update_cache: yes
 
-    - name: Ensure Docker service is running and enabled
+    - name: Ensure Docker service is running
       service:
         name: docker
         state: started
         enabled: yes
 
-    - name: Add current user to Docker group
+    - name: Add current user to the Docker group
       user:
-        name: ubuntu 
+        name: ubuntu
         groups: docker
         append: yes
         state: present
