@@ -48,7 +48,7 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 | 📊 **Update Inventory** | Management of target deployment hosts |
 | 🚀 **Run Ansible Playbook** | Application of infrastructure configurations |
 | 🌐 **Run Ansible Webapp Playbook** | Deployment of application components |
-| 📢 **Post Actions** | Notification and validation of deployment success |
+| 📢 **Post Actions** | Notification through Slack and validation of deployment success |
 
 ### CD Pipeline Key Highlights
 - **Secure Access for secret files** : Ensures sensitive pemfile are securely stored and retrieved from AWS S3
@@ -82,7 +82,10 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 ![CD Pipeline](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/CD.png)
 
 ### Sonarqube Analysis View
-![CD Pipeline](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/CodeQuality.png)
+![SonarQube](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/CodeQuality.png)
+
+### Build status Slack Notifications
+![Slack](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/Slack.png)
 
 ### AWS S3 Buckets
 ![S3 Buckets](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/S3-Buckets.png)
