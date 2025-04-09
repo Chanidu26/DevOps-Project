@@ -3,14 +3,11 @@ pipeline {
     environment {
         AWS_REGION = 'us-east-1' 
         AWS_CREDENTIALS_ID = 'aws-credentials-id' 
+        SLACK_CHANNEL = '#all-production-mern'  
+        SLACK_CREDENTIAL_ID = 'slack-token'  
     }
 
     stages {
-        stage('Clean Workspace') {
-            steps {
-                cleanWs() 
-            }
-        }
         stage('Checkout') {
             steps {
                 git branch: 'main', credentialsId: 'github-cred', url: 'https://github.com/Chanidu26/devops-cd.git'
@@ -41,6 +38,13 @@ pipeline {
             steps {
                 dir("terraform"){
                     sh 'terraform init'
+                }
+            }
+        }
+        stage('terraform validate'){
+            steps {
+                dir("terraform"){
+                    sh 'terraform validate'
                 }
             }
         }
@@ -88,12 +92,19 @@ pipeline {
     post {
         success {
             echo "Pipeline executed successfully!"
+            slackSend(channel: "${SLACK_CHANNEL}", color: 'good', message: "✅ *Build Success* for Job: `${env.JOB_NAME}` #${env.BUILD_NUMBER}\n<${env.BUILD_URL}|View Logs>")
         }
         failure {
             echo "Pipeline failed. Please check the logs."
+            slackSend(channel: "${SLACK_CHANNEL}", color: 'danger', message: "❌ *Build Failed* for Job: `${env.JOB_NAME}` #${env.BUILD_NUMBER}\n<${env.BUILD_URL}|View Logs>")
         }
         always {
             echo "Pipeline execution finished."
+            sh '''
+            echo "Cleaning up PEM files..."
+            rm -f terraform/devops.pem
+            rm -f ansible/devops.pem
+            '''
         }
     }
 }
