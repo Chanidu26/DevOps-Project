@@ -75,6 +75,9 @@ This project demonstrates robust Continuous Integration (CI) and Continuous Deli
 
 ## 📸 Screenshots
 
+### ArgoCD Minikube Deployment
+![CI Pipeline](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/ArgoCD-Deploy.png)
+
 ### CI Pipeline Stage View
 ![CI Pipeline](https://raw.githubusercontent.com/Chanidu26/DevOps-Project/refs/heads/main/figures/CI.png)
 
